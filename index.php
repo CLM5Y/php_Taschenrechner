@@ -6,13 +6,18 @@ if (!isset($_SESSION["speicher"])) {
     $_SESSION["speicher"] = null;
 }
 
+// Session-Speicher für die Listbox
+if (!isset($_SESSION["ergebnisspeicher"])) {
+    $_SESSION["ergebnisspeicher"] = [];
+}
+
 $zahl1 = $_POST["zahl1"] ?? "";
 $zahl2 = $_POST["zahl2"] ?? "";
 $operator = $_POST["operator"] ?? "+";
-$ergebnis = "";
+$ergebnis = $_POST["ergebnis"] ?? "";
 
 /*
- AUSBAUSTUFE 2 – Funktionslogik
+ AUSBAUSTUFE 3 – Funktionslogik
 */
 
 // CLEAR (C) → Eingaben & Ergebnis löschen
@@ -28,6 +33,10 @@ else if (($zahl1 !== "" && $zahl2 !== "") && (isset($_POST["calc"]) || isset($_P
         "*" => $zahl1 * $zahl2,
         "/" => ($zahl2 != 0) ? $zahl1 / $zahl2 : "Fehler /0",
     };
+    // Nur sinnvolle Ergebnisse in die History übernehmen
+    if ($ergebnis !== "Fehler /0") {
+        $_SESSION["ergebnisspeicher"][] = $ergebnis;
+    }
 }
 
 // MEMORY ADD (M+) → Ergebnis wird gespeichert (nur wenn vorhanden!)
@@ -41,6 +50,12 @@ if (isset($_POST["btnMR"]) && $_SESSION["speicher"] !== null) {
     $zahl2 = "";
     $ergebnis = "";
 }
+
+/*  RC: Ergebnisliste löschen  */
+if (isset($_POST["btnRC"])) {
+    $_SESSION["ergebnisspeicher"] = [""];
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -89,7 +104,15 @@ if (isset($_POST["btnMR"]) && $_SESSION["speicher"] !== null) {
 
 <body>
 
-    <h1>PHP Taschenrechner – Ausbaustufe 2</h1>
+    <h1>PHP Taschenrechner – Ausbaustufe 3</h1>
+
+    <h2>Letzte Ergebnisse</h2>
+    <select size="5" style="width: 280px; height: 100px;">
+        <?php foreach ($_SESSION["ergebnisspeicher"] as $eintrag): ?>
+            <option><?= htmlspecialchars($eintrag) ?></option>
+        <?php endforeach; ?>
+    </select>
+    <br><br>
 
     <form method="post">
 
@@ -109,7 +132,8 @@ if (isset($_POST["btnMR"]) && $_SESSION["speicher"] !== null) {
             <input type="number" name="zahl2" value="<?= $zahl2 ?>">
 
             <label>Ergebnis</label>
-            <input id="result" type="text" value="<?= $ergebnis ?>" disabled>
+            <input id="result" name="ergebnis" type="text" value="<?= $ergebnis ?>" readonly>
+
         </div>
 
         <div class="btnrow">
@@ -117,6 +141,7 @@ if (isset($_POST["btnMR"]) && $_SESSION["speicher"] !== null) {
             <button type="submit" name="btnC">C</button>
             <button type="submit" name="btnMplus">M+</button>
             <button type="submit" name="btnMR">MR</button>
+            <button type="submit" name="btnRC">RC</button>
         </div>
 
     </form>
