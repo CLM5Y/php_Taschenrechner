@@ -17,7 +17,7 @@ Um das Projekt ausführen zu können, benötigst du:
 
 ## 🚀 Projekt starten
 
-### 🔹 Möglichkeit 1 – **PHP Built-in Webserver (empfohlen)**
+### 🔹**PHP Built-in Webserver (empfohlen)**
 
 1. In das Projektverzeichnis wechseln:
 
@@ -42,5 +42,6 @@ Um das Projekt ausführen zu können, benötigst du:
 | Multiplikation | 4 * 4 | 16                       |
 | Division     | 10 / 2  | 5                        |
 | Fehlerfall   | 7 / 0   | Meldung "Fehler: /0"     |
+
 
 
