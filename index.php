@@ -1,88 +1,130 @@
+<?php
+session_start();
+
+// Session-Speicher initialisieren
+if (!isset($_SESSION["speicher"])) {
+    $_SESSION["speicher"] = null;
+}
+
+$zahl1 = $_POST["zahl1"] ?? "";
+$zahl2 = $_POST["zahl2"] ?? "";
+$operator = $_POST["operator"] ?? "+";
+$ergebnis = "";
+
+/*
+ AUSBAUSTUFE 2 – Funktionslogik
+*/
+
+// CLEAR (C) → Eingaben & Ergebnis löschen
+if (isset($_POST["btnC"])) {
+    $zahl1 = $zahl2 = $ergebnis = "";
+}
+
+// Rechnen nun ausgelagert (= oder M+) → nur wenn beide Zahlen vorhanden sind
+else if (($zahl1 !== "" && $zahl2 !== "") && (isset($_POST["calc"]) || isset($_POST["btnMplus"]))) {
+    $ergebnis = match ($operator) {
+        "+" => $zahl1 + $zahl2,
+        "-" => $zahl1 - $zahl2,
+        "*" => $zahl1 * $zahl2,
+        "/" => ($zahl2 != 0) ? $zahl1 / $zahl2 : "Fehler /0",
+    };
+}
+
+// MEMORY ADD (M+) → Ergebnis wird gespeichert (nur wenn vorhanden!)
+if (isset($_POST["btnMplus"]) && $ergebnis !== "" && $ergebnis !== "Fehler /0") {
+    $_SESSION["speicher"] = $ergebnis;
+}
+
+// MEMORY READ (MR) → gespeicherten Wert in Zahl 1 einfügen und beide anderen Felder leeren
+if (isset($_POST["btnMR"]) && $_SESSION["speicher"] !== null) {
+    $zahl1 = $_SESSION["speicher"];
+    $zahl2 = "";
+    $ergebnis = "";
+}
+
+?>
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<title>Taschenrechner</title>
+    <meta charset="UTF-8">
+    <title>PHP Taschenrechner Ausbaustufe 2</title>
 
-<style>
-    body{
-        font-family: Arial;
-        text-align:center;
-        margin-top: 50px;
-    }
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 40px;
+        }
 
-    .row {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-    }
+        .row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
 
-    input {
-        width: 80px;
-        height: 25px;
-        text-align: center;
-    }
+        input,
+        select {
+            width: 80px;
+            text-align: center;
+            height: 25px;
+        }
 
-    #result {
-        background: #dedede;
-        border: 1px solid gray;
-        width: 120px;
-        height: 25px;
-    }
+        #result {
+            background: #d9d9d9;
+            border: 1px solid #888;
+            width: 120px;
+            font-weight: bold;
+        }
 
-    button {
-        margin-top: 20px;
-        padding: 5px 15px;
-    }
-</style>
+        .btnrow {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Taschenrechner</h1>
+    <h1>PHP Taschenrechner – Ausbaustufe 2</h1>
 
-<form method="post">
+    <form method="post">
 
-<div class="row">
-    <label>Zahl 1</label>
-    <input type="number" name="zahl1" required>
+        <div class="row">
+            <label>Zahl 1</label>
+            <input type="number" name="zahl1" value="<?= $zahl1 ?>">
 
-    <label>Operator</label>
-    <select name="operator">
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="*">*</option>
-        <option value="/">/</option>
-    </select>
+            <label>Operator</label>
+            <select name="operator">
+                <option value="+" <?= ($operator === "+") ? "selected" : "" ?>>+</option>
+                <option value="-" <?= ($operator === "-") ? "selected" : "" ?>>-</option>
+                <option value="*" <?= ($operator === "*") ? "selected" : "" ?>>*</option>
+                <option value="/" <?= ($operator === "/") ? "selected" : "" ?>>/</option>
+            </select>
 
-    <label>Zahl 2 </label>
-    <input type="number" name="zahl2" required>
+            <label>Zahl 2</label>
+            <input type="number" name="zahl2" value="<?= $zahl2 ?>">
 
-    <label>Ergebnis</label>
+            <label>Ergebnis</label>
+            <input id="result" type="text" value="<?= $ergebnis ?>" disabled>
+        </div>
 
-    <!-- 
-    1. Formular wird abgeschickt (POST)
-    2. PHP prüft: if(isset($_POST['calc']))
-    3. Falls gerechnet wurde → PHP berechnet $res
-    4. Das Ergebnis wird in das value="" geschrieben → erscheint im Feld -->
+        <div class="btnrow">
+            <button type="submit" name="calc">=</button>
+            <button type="submit" name="btnC">C</button>
+            <button type="submit" name="btnMplus">M+</button>
+            <button type="submit" name="btnMR">MR</button>
+        </div>
 
-    <input id="result" type="text" value="<?php
-        if(isset($_POST['calc'])){
-            $a=$_POST['zahl1']; $b=$_POST['zahl2']; $op=$_POST['operator'];
-            $ergebnis = match($op){
-                "+" => $a+$b,
-                "-" => $a-$b,
-                "*" => $a*$b,
-                "/" => ($b!=0)?$a/$b:"Fehler /0",
-            };
-            echo $ergebnis;
-        }
-    ?>" disabled>
-</div>
+    </form>
 
-<button name="calc">Berechnen</button>
+    <p style="margin-top:25px;font-size:15px;">
+        <b>Speicher:</b> <?= $_SESSION["speicher"] !== null ? $_SESSION["speicher"] : "leer" ?>
+    </p>
 
-</form>
 </body>
+
 </html>
