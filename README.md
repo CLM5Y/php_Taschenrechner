@@ -21,8 +21,7 @@ Um das Projekt ausführen zu können, benötigst du:
 
 1. In das Projektverzeichnis wechseln:
 
-   ```bash
-   cd pfad/zum/projekt```
+   ```cd pfad/zum/projekt```
 
 2. PHP-Server starten
 
@@ -42,6 +41,7 @@ Um das Projekt ausführen zu können, benötigst du:
 | Multiplikation | 4 * 4 | 16                       |
 | Division     | 10 / 2  | 5                        |
 | Fehlerfall   | 7 / 0   | Meldung "Fehler: /0"     |
+
 
 
 
