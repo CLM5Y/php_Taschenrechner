@@ -26,7 +26,7 @@ if (isset($_POST["btnC"])) {
 }
 
 // Rechnen nun ausgelagert (= oder M+) → nur wenn beide Zahlen vorhanden sind
-else if (($zahl1 !== "" && $zahl2 !== "") && (isset($_POST["calc"]))) {
+else if($zahl1 !== "" && $zahl2 !== "" && isset($_POST["calc"])) {
     $ergebnis = match ($operator) {
         "+" => $zahl1 + $zahl2,
         "-" => $zahl1 - $zahl2,
