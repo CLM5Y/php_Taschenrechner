@@ -26,11 +26,11 @@ Um das Projekt ausführen zu können, benötigst du:
 
 2. PHP-Server starten
 
-```php -S localhost:8000```
+   ```php -S localhost:8000```
 
 3. Im Browser öffnen
 
-```http://localhost:8080```
+   ```http://localhost:8080```
 
 
 ## 🧪 Testen
@@ -42,6 +42,7 @@ Um das Projekt ausführen zu können, benötigst du:
 | Multiplikation | 4 * 4 | 16                       |
 | Division     | 10 / 2  | 5                        |
 | Fehlerfall   | 7 / 0   | Meldung "Fehler: /0"     |
+
 
 
 
